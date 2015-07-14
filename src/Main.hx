@@ -7,6 +7,13 @@ class Main extends luxe.Game {
 
     override function config(config:luxe.AppConfig) {
 
+        // tilemap assets
+        config.preload.textures.push({ id:'assets/level_01.png' });
+        config.preload.texts.push({ id:'assets/level_01.xml' });
+
+        // player assets
+        config.preload.textures.push({ id:'assets/player.png' });
+
         return config;
 
     } //config
@@ -18,7 +25,7 @@ class Main extends luxe.Game {
         machine.add(new MenuState('menu_state'));
         machine.add(new PlayState('play_state'));
         Luxe.on(init, function(_) {
-            machine.set('menu_state');
+            machine.set('play_state');
         });
 
     } //ready
@@ -48,6 +55,5 @@ class Main extends luxe.Game {
         Luxe.input.bind_key('space', Key.space);
 
     } //connect_input
-
 
 } //Main
