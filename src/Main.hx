@@ -1,4 +1,5 @@
 import luxe.Input;
+import luxe.Screen;
 import luxe.States;
 
 class Main extends luxe.Game {
@@ -37,6 +38,13 @@ class Main extends luxe.Game {
         }
 
     } //onkeyup
+
+    override function onwindowresized(e:WindowEvent) {
+        
+        // Luxe.camera.viewport = new luxe.Rectangle(0,0,e.event.x, e.event.y);
+        // Luxe.camera.zoom = e.event.x / 960;
+
+    } //onwindowresized
 
     override function update(dt:Float) {
 

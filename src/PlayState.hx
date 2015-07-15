@@ -10,7 +10,7 @@ class PlayState extends State {
 
     var map1 : Tilemap;
     var player : Sprite;
-    var player_tex : Texture;
+    var player_texture : Texture;
 
     public function new(_name:String) {
         super({ name:_name });
@@ -19,17 +19,17 @@ class PlayState extends State {
     override function init() {
 
         setup_tilemap();
-        player_tex = Luxe.resources.texture('assets/player.png');
+        player_texture = Luxe.resources.texture('assets/player.png');
 
     } //init
 
     override function onenter<T>(_value:T) {
 
         map1.display({});
+
         player = new Sprite({
-            texture : player_tex,
-            pos : new Vector(100, 100),
-            size : new Vector(32, 32),
+            texture : player_texture,
+            pos : new Vector(100, 500),
         });
         player.add(new Player('player'));
 
