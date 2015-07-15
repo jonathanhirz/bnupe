@@ -14,8 +14,10 @@ class Player extends Component {
     var dampening_amount : Float = 0.90;
     var cancel_movement_dampening : Float = 0.80;
     var h_movement_speed : Float = 15;
+    var v_movement_speed : Float = 10;
     var max_h_speed : Float = 40;
-    var max_v_speed : Float = 50;
+    var max_v_speed : Float = 30;
+    var jump_amount : Float = -7;
 
     // world variables
     var gravity : Float = 10.0;
@@ -65,6 +67,16 @@ class Player extends Component {
 
         // full stop
         if(Math.abs(velocity.x) < 0.05) velocity.x = 0.0;
+
+        // vertical movement
+        acceleration.y = v_movement_speed;
+        velocity.y += acceleration.y * dt;
+        velocity.y = Maths.clamp(velocity.y, -max_v_speed, max_v_speed);
+        player.pos.y += velocity.y;
+
+        if(Luxe.input.inputpressed('space')) {
+            velocity.y = jump_amount;
+        }
 
     } //update
 
