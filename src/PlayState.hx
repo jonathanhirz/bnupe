@@ -8,7 +8,7 @@ import phoenix.Texture;
 
 class PlayState extends State {
 
-    var map1 : Tilemap;
+    public static var map1 : Tilemap;
     var player : Sprite;
     var player_texture : Texture;
 
@@ -25,7 +25,9 @@ class PlayState extends State {
 
     override function onenter<T>(_value:T) {
 
-        map1.display({});
+        map1.display({ 
+            // grid:true 
+        });
 
         player = new Sprite({
             texture : player_texture,
