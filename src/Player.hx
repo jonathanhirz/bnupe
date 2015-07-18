@@ -20,8 +20,7 @@ class Player extends Component {
     var jump_amount : Float = -7;
 
     // world variables
-    var gravity : Float = 0.0;
-
+    var gravity : Float = 10.0;
     var tilemap : Tilemap;
 
     public function new(_name:String) {
@@ -84,7 +83,7 @@ class Player extends Component {
         if(Math.abs(velocity.x) < 0.05) velocity.x = 0.0;
 
         // vertical movement
-        // acceleration.y = gravity;
+        acceleration.y = gravity;
         velocity.y += acceleration.y * dt;
         velocity.y = Maths.clamp(velocity.y, -max_v_speed, max_v_speed);
         player.pos.y += velocity.y;
