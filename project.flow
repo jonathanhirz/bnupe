@@ -3,7 +3,7 @@
     window: {
       width:960,
       height:640,
-      title:'plat',
+      title:'bnupe',
       fullscreen:false,
       resizable:true,
       if : {
@@ -18,13 +18,13 @@
   },
 
   project : {
-    name : 'plat',
+    name : 'bnupe',
     version : '0.0.1',
     author : 'Jonathan Hirz',
 
     app : {
-      name : 'plat',
-      package : 'com.jonathanhirz.plat'
+      name : 'bnupe',
+      package : 'com.jonathanhirz.bnupe'
     },
 
     build : {
