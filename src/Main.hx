@@ -62,11 +62,7 @@ class Main extends luxe.Game {
 
     override function update(dt:Float) {
 
-        if(Luxe.time - count_time > 0.5) {
-            count_time = Luxe.time;
-            fps_text.text = 'FPS: ' + Std.int(1.0 / Luxe.dt);
-        }
-
+        fps_text.text = 'FPS: ' + Math.round(1.0/Luxe.debug.dt_average);
 
     } //update
 
