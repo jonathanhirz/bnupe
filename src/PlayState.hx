@@ -10,6 +10,7 @@ class PlayState extends State {
 
     public static var map1 : Tilemap;
     var player : Sprite;
+    var player_desired_position : Vector;
     var player_texture : Texture;
 
     public function new(_name:String) {
@@ -44,6 +45,8 @@ class PlayState extends State {
 
     override function update(dt:Float) {
 
+        player_desired_position = player.get('player').desired_position.clone();
+        player.pos = player_desired_position;
 
     } //update
 

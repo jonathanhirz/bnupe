@@ -1,10 +1,14 @@
 import luxe.Input;
 import luxe.Screen;
 import luxe.States;
+import luxe.Text;
+import luxe.Vector;
 
 class Main extends luxe.Game {
 
     var machine : States;
+    var count_time : Float = 0.0;
+    var fps_text : Text;
 
     override function config(config:luxe.AppConfig) {
 
@@ -29,12 +33,22 @@ class Main extends luxe.Game {
             machine.set('play_state');
         });
 
+        fps_text = new Text({
+            text : 'FPS: ',
+            point_size : 20,
+            pos : new Vector(0,0),
+            visible : false
+        });
+
     } //ready
 
     override function onkeyup(e:KeyEvent) {
 
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
+        }
+        if(e.keycode == Key.key_f) {
+            fps_text.visible = !fps_text.visible;
         }
 
     } //onkeyup
@@ -47,6 +61,12 @@ class Main extends luxe.Game {
     } //onwindowresized
 
     override function update(dt:Float) {
+
+        if(Luxe.time - count_time > 0.5) {
+            count_time = Luxe.time;
+            fps_text.text = 'FPS: ' + Std.int(1.0 / Luxe.dt);
+        }
+
 
     } //update
 
