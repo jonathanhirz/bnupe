@@ -25,6 +25,9 @@ class Main extends luxe.Game {
 
     override function ready() {
 
+        // app.update_rate = 1/30;
+        // app.render_rate = 1/30;
+
         connect_input();
         machine = new States({ name:'statemachine' });
         machine.add(new MenuState('menu_state'));
