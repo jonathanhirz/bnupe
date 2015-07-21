@@ -3,7 +3,6 @@ import luxe.Vector;
 import luxe.Sprite;
 import luxe.Input;
 import luxe.utils.Maths;
-import luxe.tilemaps.Tilemap;
 
 class Player extends Component {
 

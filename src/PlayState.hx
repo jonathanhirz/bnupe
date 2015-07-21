@@ -1,32 +1,30 @@
 import luxe.States;
-import pmi.PyxelMapImporter;
-import pmi.LuxeHelper;
-import luxe.tilemaps.Tilemap;
 import luxe.Vector;
 import luxe.Sprite;
 import phoenix.Texture;
+import luxe.tilemaps.Tilemap;
 
 class PlayState extends State {
 
-    public static var map1 : Tilemap;
     var player : Sprite;
     var player_desired_position : Vector;
     var player_texture : Texture;
+    var tilemap : Tilemap;
 
-    public function new(_name:String) {
+    public function new(_name:String, _tilemap:Tilemap) {
         super({ name:_name });
+        tilemap = _tilemap;
     } //new
 
     override function init() {
 
-        setup_tilemap();
         player_texture = Luxe.resources.texture('assets/player.png');
 
     } //init
 
     override function onenter<T>(_value:T) {
 
-        map1.display({ 
+        tilemap.display({ 
             // grid:true 
         });
 
@@ -46,23 +44,30 @@ class PlayState extends State {
     override function update(dt:Float) {
 
         player_desired_position = player.get('player').desired_position.clone();
-        player.pos = player_desired_position;
+
+        // if trying to move right
+        if(player_desired_position.x > player.pos.x) {
+            var tile_standing_on = tilemap.tile_at_pos('ground', player_desired_position);
+            if(tilemap.tile_at('ground', tile_standing_on.x+1, tile_standing_on.y).id != 0) {
+                player.get('player').velocity.x = 0;
+                player_desired_position = player.pos;
+            } else {
+                player.pos = player_desired_position;
+            }
+
+        }
+        if(player_desired_position.x < player.pos.x) {
+            var tile_standing_on = tilemap.tile_at_pos('ground', player_desired_position);
+            if(tilemap.tile_at('ground', tile_standing_on.x-1, tile_standing_on.y).id != 0) {
+                player.get('player').velocity.x = 0;
+                player_desired_position = player.pos;
+            } else {
+                player.pos = player_desired_position;
+            }
+
+        } 
+
 
     } //update
-
-    function setup_tilemap() {
-
-        if(map1 == null) {
-            var map1_data = new PyxelMapImporter(Luxe.resources.text('assets/level_01.xml').asset.text);
-            map1 = LuxeHelper.getTilemap('assets/level_01.png');
-            var background = map1_data.getDatasFromLayer('background');
-            var ground = map1_data.getDatasFromLayer('ground');
-            var decoration = map1_data.getDatasFromLayer('decoration');
-            LuxeHelper.fillLayer(map1, background);
-            LuxeHelper.fillLayer(map1, ground);
-            LuxeHelper.fillLayer(map1, decoration);
-        }
-
-    } //setup_tilemap
 
 } //PlayState

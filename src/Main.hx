@@ -3,12 +3,16 @@ import luxe.Screen;
 import luxe.States;
 import luxe.Text;
 import luxe.Vector;
+import pmi.PyxelMapImporter;
+import pmi.LuxeHelper;
+import luxe.tilemaps.Tilemap;
+
 
 class Main extends luxe.Game {
 
     var machine : States;
-    var count_time : Float = 0.0;
     var fps_text : Text;
+    var map1 : Tilemap;
 
     override function config(config:luxe.AppConfig) {
 
@@ -28,14 +32,21 @@ class Main extends luxe.Game {
         // app.update_rate = 1/30;
         // app.render_rate = 1/30;
 
+        // input
         connect_input();
+
+        // tilemap
+        setup_tilemap();
+
+        // state machine setup
         machine = new States({ name:'statemachine' });
         machine.add(new MenuState('menu_state'));
-        machine.add(new PlayState('play_state'));
+        machine.add(new PlayState('play_state', map1));
         Luxe.on(init, function(_) {
-            machine.set('play_state');
+            machine.set('play_state', map1);
         });
 
+        // fps debug text
         fps_text = new Text({
             text : 'FPS: ',
             point_size : 20,
@@ -68,6 +79,21 @@ class Main extends luxe.Game {
         fps_text.text = 'FPS: ' + Math.round(1.0/Luxe.debug.dt_average);
 
     } //update
+
+    function setup_tilemap() {
+
+        if(map1 == null) {
+            var map1_data = new PyxelMapImporter(Luxe.resources.text('assets/level_01.xml').asset.text);
+            map1 = LuxeHelper.getTilemap('assets/level_01.png');
+            var background = map1_data.getDatasFromLayer('background');
+            var ground = map1_data.getDatasFromLayer('ground');
+            var decoration = map1_data.getDatasFromLayer('decoration');
+            LuxeHelper.fillLayer(map1, background);
+            LuxeHelper.fillLayer(map1, ground);
+            LuxeHelper.fillLayer(map1, decoration);
+        }
+
+    } //setup_tilemap
 
     function connect_input() {
 
