@@ -2,6 +2,7 @@ import luxe.Input;
 import luxe.Screen;
 import luxe.States;
 import luxe.Text;
+import luxe.Sprite;
 import luxe.Vector;
 import pmi.PyxelMapImporter;
 import pmi.LuxeHelper;
@@ -13,12 +14,15 @@ class Main extends luxe.Game {
     var machine : States;
     var fps_text : Text;
     var map1 : Tilemap;
+    var map2 : Tilemap;
+    var player : Sprite;
 
     override function config(config:luxe.AppConfig) {
 
         // tilemap assets
         config.preload.textures.push({ id:'assets/level_01.png' });
         config.preload.texts.push({ id:'assets/level_01.xml' });
+        config.preload.texts.push({ id:'assets/level_02.xml' });
 
         // player assets
         config.preload.textures.push({ id:'assets/player.png' });
@@ -38,12 +42,21 @@ class Main extends luxe.Game {
         // tilemap
         setup_tilemap();
 
+        // setup player sprite
+        player = new Sprite({
+            texture : Luxe.resources.texture('assets/player.png'),
+            pos : new Vector(100, 500),
+            visible : false,
+        });
+        player.add(new Player('player'));
+        player.add(new Collider('player_collider'));
+
         // state machine setup
         machine = new States({ name:'statemachine' });
         machine.add(new MenuState('menu_state'));
-        machine.add(new PlayState('play_state', map1));
+        machine.add(new PlayState('play_state', map1, player));
         Luxe.on(init, function(_) {
-            machine.set('play_state', map1);
+            machine.set('play_state', map2);
         });
 
         // fps debug text
@@ -92,6 +105,17 @@ class Main extends luxe.Game {
             LuxeHelper.fillLayer(map1, ground);
             LuxeHelper.fillLayer(map1, decoration);
         }
+        if(map2 == null) {
+            var map2_data = new PyxelMapImporter(Luxe.resources.text('assets/level_02.xml').asset.text);
+            map2 = LuxeHelper.getTilemap('assets/level_01.png');
+            var background = map2_data.getDatasFromLayer('background');
+            var ground = map2_data.getDatasFromLayer('ground');
+            var decoration = map2_data.getDatasFromLayer('decoration');
+            LuxeHelper.fillLayer(map2, background);
+            LuxeHelper.fillLayer(map2, ground);
+            LuxeHelper.fillLayer(map2, decoration);
+        }
+        //@todo: make a way to streamline map loading, maybe one function that you load an xml file into [setup_tilemap('name', data);]
 
     } //setup_tilemap
 
@@ -106,6 +130,7 @@ class Main extends luxe.Game {
         Luxe.input.bind_key('left', Key.left);
         Luxe.input.bind_key('left', Key.key_a);
         Luxe.input.bind_key('space', Key.space);
+        Luxe.input.bind_key('toggle_collider', Key.key_t);
 
     } //connect_input
 
