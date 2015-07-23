@@ -8,9 +8,9 @@ class Player extends Component {
 
     // player variables
     var player : Sprite;
-    var desired_position : Vector;
+    public var desired_position : Vector;
     var x_flipped : Bool = false;
-    var velocity : Vector;
+    public var velocity : Vector;
     var acceleration : Vector;
     var dampening_amount : Float = 0.90;
     var cancel_movement_dampening : Float = 0.80;
@@ -20,7 +20,7 @@ class Player extends Component {
     var jump_amount : Float = -7;
 
     // world variables
-    var gravity : Float = 0.0;
+    var gravity : Float = 5.0;
 
     public function new(_name:String) {
         super({ name:_name });
