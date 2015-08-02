@@ -20,7 +20,7 @@ class Player extends Component {
     var jump_amount : Float = -7;
 
     // world variables
-    var gravity : Float = 5.0;
+    var gravity : Float = 0.0;
 
     public function new(_name:String) {
         super({ name:_name });

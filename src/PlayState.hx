@@ -44,33 +44,39 @@ class PlayState extends State {
 
         //@todo: check if tile we are checking is off the map...causes crash
 
-        var player_tile_position = tilemap.worldpos_to_map(player_desired_position);
-        player_desired_position = player_component.desired_position;
+        // var player_tile_position = tilemap.worldpos_to_map(player_desired_position);
+        // player_desired_position = player_component.desired_position;
 
-        // get_surrounding_tiles_at_position() [build an array of the 8 tiles around the player, organized]
-        // check_for_and_resolve_collisions() [check for a collision with player/world, check where that collision lands in the array, resolve accordingly]
-
+        check_for_and_resolve_collisions(player);
 
         player.pos = player_desired_position;
 
 
     } //update
 
-    function get_surrounding_tiles_at_position(_player_tile_position:Vector) {
-        // take the player's tile position, build an array of the 8 surrounding tiles (not including the one he's on)
-        // organize the tiles in the correct order (check the tutorial)
-        // return an array that we can pass into the check collisions function
-
-    } //get_surrounding_tiles_at_position
-
     function check_for_and_resolve_collisions(_player:Sprite) {
         // get player's bounding box collider
         // for every collision between the player and a tile in the array,
         // check the position in the array of the collision (this gives priority)
         // resolve accordingly, update desired position
-        // update player position
 
+        var tile_player_is_on = get_surrounding_tiles_at_position(_player);
+        if(tilemap.tile_at('ground', tile_player_is_on.x + 1, tile_player_is_on.y).id != 0) {
+            trace('hit');
+        }
+        // trace(tile_player_is_on);
 
     } //check_for_and_resolve_collisions
+
+    function get_surrounding_tiles_at_position(_player:Sprite) {
+        // take the player's tile position, build an array of the 8 surrounding tiles (not including the one he's on)
+        // organize the tiles in the correct order (check the tutorial)
+        // return an array that we can pass into the check collisions function
+
+        var player_tile_position = tilemap.worldpos_to_map(_player.pos);
+        var tile_player_is_on = tilemap.tile_at('ground', Std.int(player_tile_position.x), Std.int(player_tile_position.y));
+        return tile_player_is_on;
+
+    } //get_surrounding_tiles_at_position
 
 } //PlayState
