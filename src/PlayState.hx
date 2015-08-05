@@ -60,10 +60,11 @@ class PlayState extends State {
         // check the position in the array of the collision (this gives priority)
         // resolve accordingly, update desired position
 
-        var tile_player_is_on = get_surrounding_tiles_at_position(_player);
-        if(tilemap.tile_at('ground', tile_player_is_on.x + 1, tile_player_is_on.y).id != 0) {
-            trace('hit');
-        }
+        var tiles_player_is_on = get_surrounding_tiles_at_position(_player);
+        // trace(tiles_player_is_on[0]);
+        // if(tilemap.tile_at('ground', tiles_player_is_on.x + 1, tiles_player_is_on.y).id != 0) {
+        //     trace('hit');
+        // }
         // trace(tile_player_is_on);
 
     } //check_for_and_resolve_collisions
@@ -73,9 +74,17 @@ class PlayState extends State {
         // organize the tiles in the correct order (check the tutorial)
         // return an array that we can pass into the check collisions function
 
+        var array_of_tiles_surrounding_player : Array<Tile> = [];
         var player_tile_position = tilemap.worldpos_to_map(_player.pos);
-        var tile_player_is_on = tilemap.tile_at('ground', Std.int(player_tile_position.x), Std.int(player_tile_position.y));
-        return tile_player_is_on;
+
+        for(i in 0...9) {
+            var c = i % 3; // 012 012 012
+            var r = Std.int(i / 3); // 000 111 222
+            var tile_player_is_on = tilemap.tile_at('ground', Std.int(player_tile_position.x + (c - 1)), Std.int(player_tile_position.y + (r - 1)));
+            array_of_tiles_surrounding_player.push(tile_player_is_on);
+        }
+
+        return array_of_tiles_surrounding_player;
 
     } //get_surrounding_tiles_at_position
 
