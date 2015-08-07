@@ -16,6 +16,7 @@ class Main extends luxe.Game {
     var map1 : Tilemap;
     var map2 : Tilemap;
     var player : Sprite;
+    public static var draw_colliders : Bool = false;
 
     override function config(config:luxe.AppConfig) {
 
@@ -90,6 +91,10 @@ class Main extends luxe.Game {
     override function update(dt:Float) {
 
         fps_text.text = 'FPS: ' + Math.round(1.0/Luxe.debug.dt_average);
+
+        if(Luxe.input.inputpressed('toggle_collider')) {
+            Main.draw_colliders = !Main.draw_colliders;
+        }
 
     } //update
 

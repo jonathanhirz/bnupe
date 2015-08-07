@@ -65,10 +65,15 @@ class PlayState extends State {
         // resolve accordingly, update desired position
 
         var tiles_player_is_on = get_surrounding_tiles_at_position(_player);
-        for(tile in tiles_player_is_on) {
-            var poly = draw_a_polygon(tile);
-            // shape_drawer.drawPolygon(poly);
-        }
+        var poly = create_a_polygon(tiles_player_is_on[7]);
+        shape_drawer.drawPolygon(poly);
+        // for(tile in tiles_player_is_on) {
+        //     var poly = create_a_polygon(tile);
+
+        //     if(Main.draw_colliders) {
+        //         shape_drawer.drawPolygon(poly);
+        //     }
+        // }
 
         // if(tilemap.tile_at('ground', tiles_player_is_on.x + 1, tiles_player_is_on.y).id != 0) {
         //     trace('hit');
@@ -96,10 +101,10 @@ class PlayState extends State {
 
     } //get_surrounding_tiles_at_position
 
-    function draw_a_polygon(_tile:Tile) {
+    function create_a_polygon(_tile:Tile) {
 
         return Polygon.rectangle(_tile.pos.x, _tile.pos.y, _tile.size.x, _tile.size.y, false);
 
-    } //draw_a_polygon
+    } //create_a_polygon
 
 } //PlayState

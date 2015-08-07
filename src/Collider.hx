@@ -10,7 +10,7 @@ class Collider extends Component {
     var block : Sprite;
     var block_collider : Polygon;
     var shape_drawer : ShapeDrawerLuxe;
-    var draw_collider : Bool = false;
+    // var draw_collider : Bool = false;
 
     public function new(_name:String) {
 
@@ -32,12 +32,8 @@ class Collider extends Component {
 
         block_collider.position = block.pos;
         block_collider.rotation = block.rotation_z;
-        if(draw_collider) {
+        if(Main.draw_colliders) {
             shape_drawer.drawPolygon(block_collider);
-        }
-
-        if(Luxe.input.inputpressed('toggle_collider')) {
-            draw_collider = !draw_collider;
         }
 
     } //update
