@@ -50,7 +50,7 @@ class Main extends luxe.Game {
             visible : false,
         });
         player.add(new Player('player'));
-        player.add(new Collider('player_collider'));
+        // player.add(new Collider('player_collider'));
 
         // state machine setup
         machine = new States({ name:'statemachine' });

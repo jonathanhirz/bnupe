@@ -18,9 +18,10 @@ class Player extends Component {
     var max_h_speed : Float = 40;
     var max_v_speed : Float = 30;
     var jump_amount : Float = -7;
+    public var on_ground : Bool = false;
 
     // world variables
-    var gravity : Float = 0.0;
+    var gravity : Float = 15.0;
 
     public function new(_name:String) {
         super({ name:_name });
@@ -72,9 +73,18 @@ class Player extends Component {
         velocity.y = Maths.clamp(velocity.y, -max_v_speed, max_v_speed);
         desired_position.y += velocity.y;
 
-        if(Luxe.input.inputpressed('space')) {
+        if(Luxe.input.inputpressed('space') && on_ground) {
+            on_ground = false;
             velocity.y = jump_amount;
+            // trace('jumped');
+            // trace(on_ground);
         }
+        if(on_ground) {
+            velocity.y = 0;
+        }
+
+        // trace(velocity.y);
+        trace(on_ground);
 
     } //update
 

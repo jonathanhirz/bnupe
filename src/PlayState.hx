@@ -4,6 +4,7 @@ import luxe.Sprite;
 import luxe.Component;
 import phoenix.Texture;
 import luxe.tilemaps.Tilemap;
+import luxe.collision.Collision;
 import luxe.collision.shapes.*;
 import luxe.collision.ShapeDrawerLuxe;
 
@@ -11,6 +12,7 @@ class PlayState extends State {
 
     var player : Sprite;
     var player_component : Player;
+    var player_collider : Polygon;
     var player_desired_position : Vector;
     var tilemap : Tilemap;
     var shape_drawer : ShapeDrawerLuxe;
@@ -34,6 +36,7 @@ class PlayState extends State {
         });
         player.visible = true;
         player_component = player.get('player');
+        // player_collider = player.get('player_collider').block_collider;
 
         player_desired_position = player_component.desired_position;
 
@@ -65,21 +68,37 @@ class PlayState extends State {
         // resolve accordingly, update desired position
 
         var tiles_player_is_on = get_surrounding_tiles_at_position(_player);
-        var poly = create_a_polygon(tiles_player_is_on[7]);
-        shape_drawer.drawPolygon(poly);
-        // for(tile in tiles_player_is_on) {
-        //     var poly = create_a_polygon(tile);
 
-        //     if(Main.draw_colliders) {
-        //         shape_drawer.drawPolygon(poly);
-        //     }
-        // }
+        for(tile in tiles_player_is_on) {
+            if(tile.id > 0) {
+                var poly = create_a_polygon(tile);
+                var player_poly = Polygon.rectangle(player_desired_position.x, player_desired_position.y, player.size.x, player.size.y, true);
+                var coll = Collision.shapeWithShape(player_poly, poly);
+                if(coll != null) {
+                    // trace(coll.separation.y);
+                    // index7 below
+                    if(tiles_player_is_on.indexOf(tile) == 7) {
+                        player_desired_position.y += coll.separation.y - 0;
+                        player_component.on_ground = true;
+                        // player_component.velocity.y = 0;
+                        // trace('collision');
+                    }
 
-        // if(tilemap.tile_at('ground', tiles_player_is_on.x + 1, tiles_player_is_on.y).id != 0) {
-        //     trace('hit');
-        // }
-        // trace(tile_player_is_on);
+                    // index1 above
+                    if(tiles_player_is_on.indexOf(tile) == 1) {
+                        player_desired_position.y += coll.separation.y;
+                        player_component.velocity.y = 0;
 
+                    }
+                    // index3 left
+                    // index5 right
+                }
+
+                if(Main.draw_colliders) {
+                    shape_drawer.drawPolygon(poly);
+                }
+            }
+        }
     } //check_for_and_resolve_collisions
 
     function get_surrounding_tiles_at_position(_player:Sprite) {
