@@ -76,15 +76,7 @@ class Player extends Component {
         if(Luxe.input.inputpressed('space') && on_ground) {
             on_ground = false;
             velocity.y = jump_amount;
-            // trace('jumped');
-            // trace(on_ground);
         }
-        if(on_ground) {
-            velocity.y = 0;
-        }
-
-        // trace(velocity.y);
-        trace(on_ground);
 
     } //update
 

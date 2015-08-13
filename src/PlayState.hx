@@ -36,7 +36,7 @@ class PlayState extends State {
         });
         player.visible = true;
         player_component = player.get('player');
-        // player_collider = player.get('player_collider').block_collider;
+        player_collider = player.get('player_collider').block_collider;
 
         player_desired_position = player_component.desired_position;
 
@@ -72,20 +72,18 @@ class PlayState extends State {
         for(tile in tiles_player_is_on) {
             if(tile.id > 0) {
                 var poly = create_a_polygon(tile);
-                var player_poly = Polygon.rectangle(player_desired_position.x, player_desired_position.y, player.size.x, player.size.y, true);
-                var coll = Collision.shapeWithShape(player_poly, poly);
+                // var player_poly = Polygon.rectangle(player_desired_position.x, player_desired_position.y, player.size.x, player.size.y, true);
+                var coll = Collision.shapeWithShape(player_collider, poly);
                 if(coll != null) {
-                    // trace(coll.separation.y);
                     // index7 below
-                    if(tiles_player_is_on.indexOf(tile) == 7) {
+                    if(tiles_player_is_on.indexOf(tile) == 7 && player_component.velocity.y >= 0) {
                         player_desired_position.y += coll.separation.y - 0;
+                        player_component.velocity.y = 0;
                         player_component.on_ground = true;
-                        // player_component.velocity.y = 0;
-                        // trace('collision');
                     }
 
                     // index1 above
-                    if(tiles_player_is_on.indexOf(tile) == 1) {
+                    if(tiles_player_is_on.indexOf(tile) == 1 && player_component.velocity.y <= 0) {
                         player_desired_position.y += coll.separation.y;
                         player_component.velocity.y = 0;
 
@@ -96,6 +94,7 @@ class PlayState extends State {
 
                 if(Main.draw_colliders) {
                     shape_drawer.drawPolygon(poly);
+                    // shape_drawer.drawPolygon(player_poly);
                 }
             }
         }
