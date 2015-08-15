@@ -87,13 +87,15 @@ class PlayState extends State {
                         player_desired_position.y += coll.separation.y;
                         player_component.velocity.y = 0;
 
+                        
+
                     }
                     // index3 left
                     // index5 right
                 }
 
                 if(Main.draw_colliders) {
-                    shape_drawer.drawPolygon(poly);
+                    // shape_drawer.drawPolygon(poly);
                     // shape_drawer.drawPolygon(player_poly);
                 }
             }

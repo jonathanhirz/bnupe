@@ -33,7 +33,7 @@ class Collider extends Component {
         block_collider.position = block.pos;
         block_collider.rotation = block.rotation_z;
         if(Main.draw_colliders) {
-            shape_drawer.drawPolygon(block_collider);
+            // shape_drawer.drawPolygon(block_collider);
         }
 
     } //update
