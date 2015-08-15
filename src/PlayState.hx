@@ -87,8 +87,6 @@ class PlayState extends State {
                         player_desired_position.y += coll.separation.y;
                         player_component.velocity.y = 0;
 
-                        
-
                     }
                     // index3 left
                     // index5 right
