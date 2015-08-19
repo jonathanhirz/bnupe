@@ -21,7 +21,7 @@ class Player extends Component {
     public var on_ground : Bool = false;
 
     // world variables
-    var gravity : Float = 15.0;
+    var gravity : Float = 20.0;
 
     public function new(_name:String) {
         super({ name:_name });
@@ -74,6 +74,8 @@ class Player extends Component {
         desired_position.y += velocity.y;
 
         if(Luxe.input.inputpressed('space') && on_ground) {
+            //todo: add jump stop - if you hold jump, do a full jump. if you let go early, do a short jump
+            //todo: when player falls off a ledge, they shouldn't be able to jump
             on_ground = false;
             velocity.y = jump_amount;
         }

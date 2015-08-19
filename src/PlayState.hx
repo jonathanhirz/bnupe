@@ -3,6 +3,7 @@ import luxe.Vector;
 import luxe.Sprite;
 import luxe.Component;
 import phoenix.Texture;
+import luxe.Rectangle;
 import luxe.tilemaps.Tilemap;
 import luxe.collision.Collision;
 import luxe.collision.shapes.*;
@@ -15,6 +16,8 @@ class PlayState extends State {
     var player_collider : Polygon;
     var player_desired_position : Vector;
     var tilemap : Tilemap;
+    var tilemap_colliders : Array<Rectangle>;
+    var obstacles : Array<Polygon>;
     var shape_drawer : ShapeDrawerLuxe;
 
     public function new(_name:String, _tilemap:Tilemap, _player:Sprite) {
@@ -34,6 +37,28 @@ class PlayState extends State {
         tilemap.display({ 
             // grid:true 
         });
+        var tilemap_colliders = tilemap.layer('ground').bounds_fitted();
+        obstacles = [];
+        var tile_w = 32;
+        var tile_h = 32;
+        for(collider in tilemap_colliders) {
+            collider.x *= tile_w;
+            collider.y *= tile_h;
+            collider.w *= tile_w;
+            collider.h *= tile_h;
+            obstacles.push(Polygon.rectangle(collider.x, collider.y, collider.w, collider.h, false));
+        }
+        // notes from Sven
+        // var bounds = map.layer('collision').bounds_fitted();
+        // var tile_w = 16;
+        // var tile_h = 16;
+        // for(bound in bounds) {
+        //     bound.x *= tile_w * scale;
+        //     bound.y *= tile_h * scale;
+        //     bound.w *= tile_w * scale;
+        //     bound.h *= tile_h * scale;
+        //     obstacles.push(Polygon.rectangle(bound.x, bound.y, bound.w, bound.h, false));
+        // }
         player.visible = true;
         player_component = player.get('player');
         player_collider = player.get('player_collider').block_collider;
@@ -51,10 +76,41 @@ class PlayState extends State {
 
         //@todo: check if tile we are checking is off the map...causes crash
 
-        // var player_tile_position = tilemap.worldpos_to_map(player_desired_position);
-        // player_desired_position = player_component.desired_position;
-
-        check_for_and_resolve_collisions(player);
+        // check_for_and_resolve_collisions(player);
+        for(ob in obstacles) {
+            var coll = Collision.shapeWithShape(player_collider, ob);
+            if(coll != null) {
+                // below
+                if(coll.separation.y < 0) {
+                    if(player_component.velocity.y >= 0) {
+                        player_desired_position.y += coll.separation.y;
+                        player_component.velocity.y = 0;
+                        player_component.on_ground = true;
+                    }
+                }
+                // above
+                if(coll.separation.y > 0) {
+                    if(player_component.velocity.y <= 0) {
+                        player_desired_position.y += coll.separation.y;
+                        player_component.velocity.y = 0;
+                    }
+                }
+                //left
+                if(coll.separation.x > 0) {
+                    if(player_component.velocity.x <= 0) {
+                        player_desired_position.x += coll.separation.x;
+                        player_component.velocity.x = 0;
+                    }
+                }
+                // right
+                if(coll.separation.x < 0) {
+                    if(player_component.velocity.x >= 0) {
+                        player_desired_position.x += coll.separation.x;
+                        player_component.velocity.x = 0;
+                    }
+                }
+            }
+        }
 
         player.pos = player_desired_position;
 
@@ -72,24 +128,46 @@ class PlayState extends State {
         for(tile in tiles_player_is_on) {
             if(tile.id > 0) {
                 var poly = create_a_polygon(tile);
-                // var player_poly = Polygon.rectangle(player_desired_position.x, player_desired_position.y, player.size.x, player.size.y, true);
                 var coll = Collision.shapeWithShape(player_collider, poly);
                 if(coll != null) {
+                    var tile_index = tiles_player_is_on.indexOf(tile);
                     // index7 below
-                    if(tiles_player_is_on.indexOf(tile) == 7 && player_component.velocity.y >= 0) {
-                        player_desired_position.y += coll.separation.y - 0;
+                    if(tile_index == 7 && player_component.velocity.y >= 0) {
+                        player_desired_position.y += coll.separation.y;
                         player_component.velocity.y = 0;
                         player_component.on_ground = true;
                     }
-
                     // index1 above
-                    if(tiles_player_is_on.indexOf(tile) == 1 && player_component.velocity.y <= 0) {
+                    if(tile_index == 1 && player_component.velocity.y <= 0) {
                         player_desired_position.y += coll.separation.y;
                         player_component.velocity.y = 0;
 
                     }
                     // index3 left
+                    if(tile_index == 3 && player_component.velocity.x <= 0) {
+                        player_desired_position.x += coll.separation.x;
+                        player_component.velocity.x = 0;
+                    }
                     // index5 right
+                    if(tile_index == 5 && player_component.velocity.x >= 0) {
+                        player_desired_position.x += coll.separation.x;
+                        player_component.velocity.x = 0;
+                    } 
+                    // diagonals
+                    //todo: fix the bounce that sometimes happens. I think it's because it is adding the seperation.y twice                        
+                    if(coll.separation.x > coll.separation.y) {
+                        //resolve up
+                        if(tile_index == 6 && player_component.velocity.y >= 0) {
+                            player_desired_position.y += coll.separation.y;
+                            player_component.velocity.y = 0;
+                            player_component.on_ground = true;
+                        }
+                        if(tile_index == 8 && player_component.velocity.y >= 0) {
+                            player_desired_position.y += coll.separation.y;
+                            player_component.velocity.y = 0;
+                            player_component.on_ground = true;
+                        }
+                    }
                 }
 
                 if(Main.draw_colliders) {
