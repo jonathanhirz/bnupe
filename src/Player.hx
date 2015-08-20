@@ -8,7 +8,6 @@ class Player extends Component {
 
     // player variables
     var player : Sprite;
-    public var desired_position : Vector;
     var x_flipped : Bool = false;
     public var velocity : Vector;
     var acceleration : Vector;
@@ -30,7 +29,6 @@ class Player extends Component {
     override function init() {
 
         player = cast entity;
-        desired_position = player.pos.clone();
         velocity = new Vector(0,0);
         acceleration = new Vector(0,0);
 
@@ -40,9 +38,9 @@ class Player extends Component {
 
         //
         // horizontal movement
-        velocity.x += acceleration.x * dt;
+        velocity.x += acceleration.x * Luxe.physics.step_delta;
         velocity.x = Maths.clamp(velocity.x, -max_h_speed, max_h_speed);
-        desired_position.x += velocity.x;
+        pos.x += velocity.x;
 
         if(Luxe.input.inputdown('left')) {
             if(velocity.x > 0) velocity.x *= cancel_movement_dampening;
@@ -69,9 +67,9 @@ class Player extends Component {
         //
         // vertical movement
         acceleration.y = gravity;
-        velocity.y += acceleration.y * dt;
+        velocity.y += acceleration.y * Luxe.physics.step_delta;
         velocity.y = Maths.clamp(velocity.y, -max_v_speed, max_v_speed);
-        desired_position.y += velocity.y;
+        pos.y += velocity.y;
 
         if(Luxe.input.inputpressed('space') && on_ground) {
             //todo: add jump stop - if you hold jump, do a full jump. if you let go early, do a short jump
