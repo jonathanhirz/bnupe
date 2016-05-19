@@ -7,6 +7,7 @@ import luxe.Vector;
 import pmi.PyxelMapImporter;
 import pmi.LuxeHelper;
 import luxe.tilemaps.Tilemap;
+import luxe.GameConfig;
 
 
 class Main extends luxe.Game {
@@ -18,7 +19,7 @@ class Main extends luxe.Game {
     var player : Sprite;
     public static var draw_colliders : Bool = false;
 
-    override function config(config:luxe.AppConfig) {
+    override function config(config:luxe.GameConfig) {
 
         // tilemap assets
         config.preload.textures.push({ id:'assets/level_01.png' });
